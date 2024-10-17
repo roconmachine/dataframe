@@ -1,0 +1,410 @@
+openapi: 3.0.0
+info:
+  title: Fine-Grained Authorization Service
+  description: A microservice for managing fine-grained access control to resources.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Development Server
+
+paths:
+  /authz/check:
+    post:
+      summary: Check if a user is authorized to perform an action on a resource
+      description: Validate if a user is allowed to perform a specific action on a given resource.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthzRequest'
+      responses:
+        '200':
+          description: Authorization decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthzResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /resources:
+    get:
+      summary: Get a list of all resources
+      responses:
+        '200':
+          description: A list of resources
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resource'
+    post:
+      summary: Create a new resource
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resource'
+      responses:
+        '201':
+          description: Resource created successfully
+        '400':
+          description: Bad request
+
+  /resources/{id}:
+    get:
+      summary: Get details of a specific resource by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Resource details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+        '404':
+          description: Resource not found
+    put:
+      summary: Update an existing resource
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resource'
+      responses:
+        '200':
+          description: Resource updated successfully
+        '404':
+          description: Resource not found
+    delete:
+      summary: Delete a resource by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Resource deleted successfully
+        '404':
+          description: Resource not found
+
+  /policies:
+    get:
+      summary: Get a list of all policies
+      responses:
+        '200':
+          description: A list of policies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Policy'
+    post:
+      summary: Create a new policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Policy'
+      responses:
+        '201':
+          description: Policy created successfully
+        '400':
+          description: Bad request
+
+  /policies/{id}:
+    get:
+      summary: Get details of a specific policy by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Policy details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Policy'
+        '404':
+          description: Policy not found
+    put:
+      summary: Update an existing policy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Policy'
+      responses:
+        '200':
+          description: Policy updated successfully
+        '404':
+          description: Policy not found
+    delete:
+      summary: Delete a policy by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Policy deleted successfully
+        '404':
+          description: Policy not found
+  /policy-mappings:
+    get:
+      summary: "Get all policy mappings"
+      responses:
+        '200':
+          description: "A list of policy mappings"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PolicyMapping"
+
+    post:
+      summary: "Create a new policy mapping"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyMapping"
+      responses:
+        '201':
+          description: "Policy mapping created successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyMapping"
+
+  /policy-mappings/{id}:
+    get:
+      summary: "Get a specific policy mapping by ID"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID of the policy mapping"
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: "Details of the specified policy mapping"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyMapping"
+        '404':
+          description: "Policy mapping not found"
+
+    put:
+      summary: "Update a policy mapping"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID of the policy mapping to update"
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PolicyMapping"
+      responses:
+        '200':
+          description: "Policy mapping updated successfully"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PolicyMapping"
+        '404':
+          description: "Policy mapping not found"
+
+    delete:
+      summary: "Delete a policy mapping"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: "ID of the policy mapping to delete"
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: "Policy mapping deleted successfully"
+        '404':
+          description: "Policy mapping not found"
+components:
+  schemas:
+    AuthzRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The ID of the user (provided by the OAuth2 provider)
+        resourceId:
+          type: string
+          description: The ID of the resource
+        action:
+          type: string
+          enum: ["READ", "WRITE","DELETE"]
+          description: The action being performed (e.g., "read", "write", "delete")
+        context:
+          type: object
+          description: Optional context for making the authorization decision (e.g., time, location)
+
+    AuthzResponse:
+      type: object
+      properties:
+        decision:
+          type: string
+          description: Authorization decision ("allow" or "deny")
+        reason:
+          type: string
+          description: The reason for the decision
+
+
+
+    Resource:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the resource
+        type:
+          type: string
+          enum: ["FILE", "DATABASE", "API", "SERVICE", "CUSTOM"]
+          description: The type of resource (e.g., "file", "document")
+        source:
+          type: string
+          description: "The origin or source of the resource (e.g., URL, file path, database connection, service endpoint)"
+        owner:
+          type: string
+          description: The owner of the resource (user ID or group ID)
+        attributes:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: number
+              - type: boolean
+          description: "Additional attributes of the resource, defined as key-value pairs (e.g., metadata, permissions, or other properties)"
+    
+    Policy:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The unique identifier for the policy
+        name:
+          type: string
+          description: The name of the policy
+        effect:
+          type: string
+          enum: ["ALLOW", "DENY"]
+          description: Whether the policy allows or denies access ("allow" or "deny")
+        conditions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Condition"
+          description: "List of conditions that must be met for the policy"
+        
+    
+    Condition:
+      type: object
+      properties:
+        target:
+          type: string
+          enum: ["TIME", "USER_ATTRIBUTE", "RESOURCE_ATTRIBUTE", "ENVIRONMENT", "CUSTOM"]
+          description: "Type of condition (e.g., 'TIME', 'USER_ATTRIBUTE', 'RESOURCE_ATTRIBUTE', 'ENVIRONMENT')"
+        operator:
+          type: string
+          enum: ["EQUALS", "NOT_EQUALS", "GREATER_THAN", "LESS_THAN", "IN", "NOT_IN", "BETWEEN", "CONTAINS"]
+          description: "Operator to apply for comparison"
+        value:
+          oneOf:
+            - type: string
+            - type: number
+            - type: boolean
+            - type: array
+              items:
+                oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+          description: "Value or set of values to compare the target against"
+    PolicyMapping:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: "Unique identifier for the policy mapping"
+        policy_id:
+          type: string
+          format: uuid
+          description: "Foreign key to the Policy table"
+        subject_id:
+          type: string
+          format: uuid
+          description: "Foreign key to either User, Group, or Role"
+        subject_type:
+          type: string
+          enum: ["USER", "GROUP", "ROLE"]
+          description: "Indicates the subject type (USER, GROUP, ROLE)"
+        resource_id:
+          type: string
+          format: uuid
+          description: "Foreign key to the Resource table, indicating which resource the policy applies to"
+        action:
+          type: string
+          enum: ["READ", "WRITE", "DELETE", "EXECUTE", "SHARE"]
+          description: "The action that can be performed on the resource (e.g., 'READ', 'WRITE', 'DELETE', 'EXECUTE', 'SHARE')"
+
+
+
+
+
+
+
+
