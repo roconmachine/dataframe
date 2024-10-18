@@ -70,6 +70,30 @@
 			<version>6.1.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version> <!-- This is one of the last stable versions for Java EE -->
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.realityforge.javax.annotation/javax.annotation -->
+		<dependency>
+			<groupId>org.realityforge.javax.annotation</groupId>
+			<artifactId>javax.annotation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+			<version>3.5.0</version> <!-- Use the latest stable version -->
+		</dependency>
+
+
+		<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-webflux</artifactId>-->
+<!--		</dependency>-->
 
 
 	</dependencies>
@@ -91,18 +115,19 @@
 							<inputSpec>
 								${project.basedir}/src/main/resources/openapi.yaml
 							</inputSpec>
-							<generatorName>spring</generatorName>
+
 							<apiPackage>com.roconmachine.io.dataframe.access.interfaces</apiPackage>
 							<modelPackage>com.roconmachine.io.dataframe.access.models</modelPackage>
 							<supportingFilesToGenerate>
 								ApiUtil.java
 							</supportingFilesToGenerate>
+							<generatorName>spring</generatorName>
+							<library>spring-boot</library>
 							<configOptions>
-								<delegatePattern>false</delegatePattern>
+								<reactive>true</reactive>
+								<java8>true</java8>
 								<interfaceOnly>true</interfaceOnly>
-								<useSpringBoot3>true</useSpringBoot3>
-								<library>spring-boot</library>
-								<useReactive>true</useReactive>
+								<skipDefaultInterface>true</skipDefaultInterface>
 							</configOptions>
 						</configuration>
 					</execution>
@@ -110,4 +135,25 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
 </project>
