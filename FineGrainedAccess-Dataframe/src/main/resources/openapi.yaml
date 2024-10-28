@@ -283,11 +283,11 @@ components:
           type: string
           description: The ID of the user (provided by the OAuth2 provider)
         resourceId:
-          type: string
+          type: integer
           description: The ID of the resource
         action:
           type: string
-          enum: ["READ", "WRITE","DELETE"]
+          enum: ["READ", "WRITE", "DELETE", "EXECUTE", "SHARE"]
           description: The action being performed (e.g., "read", "write", "delete")
         context:
           type: object
@@ -307,52 +307,40 @@ components:
 
     Resource:
       type: object
+      description: "it stores resources identifation and meta data"
       properties:
         id:
-          type: string
-          description: The unique identifier for the resource
+          type: integer
         type:
           type: string
           enum: ["FILE", "DATABASE", "API", "SERVICE", "CUSTOM"]
-          description: The type of resource (e.g., "file", "document")
         source:
           type: string
-          description: "The origin or source of the resource (e.g., URL, file path, database connection, service endpoint)"
         owner:
           type: string
-          description: The owner of the resource (user ID or group ID)
-        attributes:
-          type: object
-          additionalProperties:
-            oneOf:
-              - type: string
-              - type: number
-              - type: boolean
-          description: "Additional attributes of the resource, defined as key-value pairs (e.g., metadata, permissions, or other properties)"
-    
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Properties'
     Policy:
       type: object
+      description: "store conditions to access or deny"
       properties:
         id:
-          type: string
-          description: The unique identifier for the policy
+          type: integer
         name:
           type: string
-          description: The name of the policy
-        effect:
-          type: string
-          enum: ["ALLOW", "DENY"]
-          description: Whether the policy allows or denies access ("allow" or "deny")
         conditions:
           type: array
           items:
             $ref: "#/components/schemas/Condition"
-          description: "List of conditions that must be met for the policy"
-        
+
     
     Condition:
       type: object
       properties:
+        id:
+          type: integer
         target:
           type: string
           enum: ["TIME", "USER_ATTRIBUTE", "RESOURCE_ATTRIBUTE", "ENVIRONMENT", "CUSTOM"]
@@ -361,46 +349,44 @@ components:
           type: string
           enum: ["EQUALS", "NOT_EQUALS", "GREATER_THAN", "LESS_THAN", "IN", "NOT_IN", "BETWEEN", "CONTAINS"]
           description: "Operator to apply for comparison"
-        value:
-          oneOf:
-            - type: string
-            - type: number
-            - type: boolean
-            - type: array
-              items:
-                oneOf:
-                  - type: string
-                  - type: number
-                  - type: boolean
-          description: "Value or set of values to compare the target against"
+        properties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Properties'
     PolicyMapping:
       type: object
+      description: "mapping policy or resource with subject like user, group or role"
       properties:
         id:
-          type: string
-          format: uuid
-          description: "Unique identifier for the policy mapping"
+          type: integer
         policy_id:
-          type: string
-          format: uuid
-          description: "Foreign key to the Policy table"
+          type: integer
         subject_id:
-          type: string
-          format: uuid
-          description: "Foreign key to either User, Group, or Role"
+          type: integer
         subject_type:
           type: string
           enum: ["USER", "GROUP", "ROLE"]
-          description: "Indicates the subject type (USER, GROUP, ROLE)"
         resource_id:
-          type: string
-          format: uuid
-          description: "Foreign key to the Resource table, indicating which resource the policy applies to"
+          type: integer
         action:
           type: string
           enum: ["READ", "WRITE", "DELETE", "EXECUTE", "SHARE"]
-          description: "The action that can be performed on the resource (e.g., 'READ', 'WRITE', 'DELETE', 'EXECUTE', 'SHARE')"
 
+    Properties:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+        key:
+          type: string
+        value_string:
+          type: string
+        value_number:
+          type: number
+        value_boolean :
+          type: boolean
 
 
 
