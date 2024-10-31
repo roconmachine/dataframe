@@ -185,7 +185,35 @@ paths:
           description: Policy not found
   /policy-mappings:
     get:
-      summary: "Get all policy mappings"
+      summary: "Search  policy mapping with query parameters"
+      parameters:
+        - in: query
+          name: policy_id
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: subject_id
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: resource_id
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: subject_type
+          schema:
+            type: string
+        - in: query
+          name: action
+          schema:
+            type: string
+        - in: query
+          name: record_status
+          schema:
+            type: string
       responses:
         '200':
           description: "A list of policy mappings"
@@ -278,12 +306,16 @@ components:
   schemas:
     AuthzRequest:
       type: object
+      required:
+        - userId
+        - action
       properties:
         userId:
           type: string
           description: The ID of the user (provided by the OAuth2 provider)
         resourceId:
           type: integer
+          format: int64
           description: The ID of the resource
         action:
           type: string
@@ -308,9 +340,17 @@ components:
     Resource:
       type: object
       description: "it stores resources identifation and meta data"
+      additionalProperties  : false
+      required:
+        - type
+        - name
+        - source
       properties:
         id:
           type: integer
+          format: int64
+        name:
+          type: string
         type:
           type: string
           enum: ["FILE", "DATABASE", "API", "SERVICE", "CUSTOM"]
@@ -325,9 +365,13 @@ components:
     Policy:
       type: object
       description: "store conditions to access or deny"
+      required:
+        - name
+        - conditions
       properties:
         id:
           type: integer
+          format: int64
         name:
           type: string
         conditions:
@@ -338,9 +382,15 @@ components:
     
     Condition:
       type: object
+      required:
+        - target
+        - operator
+        - properties
+        - effect
       properties:
         id:
           type: integer
+          format: int64
         target:
           type: string
           enum: ["TIME", "USER_ATTRIBUTE", "RESOURCE_ATTRIBUTE", "ENVIRONMENT", "CUSTOM"]
@@ -353,30 +403,44 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Properties'
+        effect:
+          type: string
+          enum : ["ALLOW", "DENY"]
     PolicyMapping:
       type: object
       description: "mapping policy or resource with subject like user, group or role"
+      required:
+        - subject_id
+        - action
       properties:
         id:
           type: integer
+          format: int64
         policy_id:
           type: integer
+          format: int64
         subject_id:
           type: integer
+          format: int64
         subject_type:
           type: string
           enum: ["USER", "GROUP", "ROLE"]
         resource_id:
           type: integer
+          format: int64
         action:
           type: string
           enum: ["READ", "WRITE", "DELETE", "EXECUTE", "SHARE"]
 
     Properties:
       type: object
+      required:
+        - uuid
+        - key
       properties:
         id:
           type: integer
+          format: int64
         uuid:
           type: string
         key:
@@ -385,6 +449,7 @@ components:
           type: string
         value_number:
           type: number
+          format: int64
         value_boolean :
           type: boolean
 
