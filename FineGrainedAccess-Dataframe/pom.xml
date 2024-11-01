@@ -5,7 +5,7 @@
 
 	<groupId>com.roconmachine.io</groupId>
 	<artifactId>dataframe.access</artifactId>
-	<version>1.0.9</version>
+	<version>1.0.12</version>
 
 	<name>dataframe</name>
 	<description>Demo project for dataframe application</description>
@@ -59,11 +59,11 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 			<version>${jakson.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>${servlet.api.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>javax.servlet</groupId>-->
+<!--			<artifactId>servlet-api</artifactId>-->
+<!--			<version>${servlet.api.version}</version>-->
+<!--		</dependency>-->
 		<dependency>
 			<groupId>jakarta.servlet</groupId>
 			<artifactId>jakarta.servlet-api</artifactId>
@@ -71,11 +71,18 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version> <!-- This is one of the last stable versions for Java EE -->
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>jakarta.validation</groupId>-->
+<!--			<artifactId>jakarta.validation-api</artifactId>-->
+<!--			<version>3.1.0</version>-->
+<!--		</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+<!--		<dependency>-->
+<!--			<groupId>javax.validation</groupId>-->
+<!--			<artifactId>validation-api</artifactId>-->
+<!--			<version>2.0.1.Final</version> &lt;!&ndash; This is one of the last stable versions for Java EE &ndash;&gt;-->
+<!--		</dependency>-->
 		<!-- https://mvnrepository.com/artifact/org.realityforge.javax.annotation/javax.annotation -->
 		<dependency>
 			<groupId>org.realityforge.javax.annotation</groupId>
@@ -145,38 +152,39 @@
 								ApiUtil.java
 							</supportingFilesToGenerate>
 							<generatorName>spring</generatorName>
-							<library>spring-boot</library>
-							<skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>
-							<!-- Enable API generation -->
-							<generateApis>true</generateApis>
-							<!-- Enable API documentation generation -->
-							<generateApiDocumentation>true</generateApiDocumentation>
-							<!-- Do not generate tests -->
-							<generateApiTests>false</generateApiTests>
-							<!-- Generate models -->
-							<generateModels>true</generateModels>
+<!--							<library>spring-boot</library>-->
+<!--							<skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>-->
+<!--							&lt;!&ndash; Enable API generation &ndash;&gt;-->
+<!--							<generateApis>true</generateApis>-->
+<!--							&lt;!&ndash; Enable API documentation generation &ndash;&gt;-->
+<!--							<generateApiDocumentation>true</generateApiDocumentation>-->
+<!--							&lt;!&ndash; Do not generate tests &ndash;&gt;-->
+<!--							<generateApiTests>false</generateApiTests>-->
+<!--							&lt;!&ndash; Generate models &ndash;&gt;-->
+<!--							<generateModels>true</generateModels>-->
 							<configOptions>
 								<spring.webflux.disable-swagger-parameter>true</spring.webflux.disable-swagger-parameter>
 								<reactive>true</reactive>
-								<sourceFolder>main/java</sourceFolder>
+								<useSpringBoot3>true</useSpringBoot3>
+<!--								<sourceFolder>main/java</sourceFolder>-->
 								<!-- Use modern java8 date/time api -->
-								<dateLibrary>java8</dateLibrary>
-								<java8>true</java8>
-								<oas3>true</oas3>
-								<useSpringController>true</useSpringController>
-								<useSpringfox>false</useSpringfox>
+<!--								<dateLibrary>java8</dateLibrary>-->
+<!--								<java8>true</java8>-->
+<!--								<oas3>true</oas3>-->
+<!--								<useSpringController>true</useSpringController>-->
+<!--								<useSpringfox>false</useSpringfox>-->
 								<!-- Enable bean validation using javax validation and hibernate validator  -->
-								<useBeanValidation>true</useBeanValidation>
-								<performBeanValidation>true</performBeanValidation>
+<!--								<useBeanValidation>true</useBeanValidation>-->
+<!--								<performBeanValidation>true</performBeanValidation>-->
 								<interfaceOnly>true</interfaceOnly>
 								<!-- Use delegate pattern to separate implementation from API definition  -->
 								<delegatePattern>false</delegatePattern>
-								<useOptional>false</useOptional>
+<!--								<useOptional>false</useOptional>-->
 								<!-- Place required parameters first in models  -->
-								<sortModelPropertiesByRequiredFlag>true</sortModelPropertiesByRequiredFlag>
-								<sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>
+<!--								<sortModelPropertiesByRequiredFlag>true</sortModelPropertiesByRequiredFlag>-->
+<!--								<sortParamsByRequiredFlag>true</sortParamsByRequiredFlag>-->
 								<skipDefaultInterface>true</skipDefaultInterface>
-<!--								<additionalModelTypeAnnotations>@lombok.Data @lombok.AllArgsConstructor @lombok.Builder</additionalModelTypeAnnotations>-->
+								<additionalModelTypeAnnotations>@lombok.AllArgsConstructor @lombok.Builder</additionalModelTypeAnnotations>
 							</configOptions>
 <!--							<configOptions>-->
 <!--								<reactive>true</reactive>-->
@@ -245,7 +253,7 @@
 								<useOptional>false</useOptional>
 								<!-- Make the models serializable -->
 								<serializableModel>true</serializableModel>
-								<apiNameSuffix>CustomApi</apiNameSuffix>
+<!--								<apiNameSuffix>CustomApi</apiNameSuffix>-->
 
 							</configOptions>
 						</configuration>

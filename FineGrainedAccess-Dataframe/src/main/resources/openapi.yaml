@@ -249,8 +249,8 @@ paths:
           required: true
           description: "ID of the policy mapping"
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         '200':
           description: "Details of the specified policy mapping"
@@ -267,10 +267,9 @@ paths:
         - name: id
           in: path
           required: true
-          description: "ID of the policy mapping to update"
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -295,8 +294,8 @@ paths:
           required: true
           description: "ID of the policy mapping to delete"
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         '204':
           description: "Policy mapping deleted successfully"
@@ -311,8 +310,8 @@ components:
         - action
       properties:
         userId:
-          type: string
-          description: The ID of the user (provided by the OAuth2 provider)
+          type: integer
+          format: int64
         resourceId:
           type: integer
           format: int64
@@ -321,9 +320,7 @@ components:
           type: string
           enum: ["READ", "WRITE", "DELETE", "EXECUTE", "SHARE"]
           description: The action being performed (e.g., "read", "write", "delete")
-        context:
-          type: object
-          description: Optional context for making the authorization decision (e.g., time, location)
+
 
     AuthzResponse:
       type: object
