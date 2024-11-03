@@ -5,7 +5,7 @@
 
 	<groupId>com.roconmachine.io</groupId>
 	<artifactId>dataframe.access</artifactId>
-	<version>1.0.12</version>
+	<version>1.0.13</version>
 
 	<name>dataframe</name>
 	<description>Demo project for dataframe application</description>

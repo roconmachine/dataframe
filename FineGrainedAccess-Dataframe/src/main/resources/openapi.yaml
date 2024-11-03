@@ -33,6 +33,23 @@ paths:
   /resources:
     get:
       summary: Get a list of all resources
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: type
+          schema:
+            type: string
+        - in: query
+          name: source
+          schema:
+            type: string
+        - in: query
+          name: owner
+          schema:
+            type: string
       responses:
         '200':
           description: A list of resources
@@ -53,6 +70,10 @@ paths:
       responses:
         '201':
           description: Resource created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
         '400':
           description: Bad request
 
@@ -64,7 +85,8 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '200':
           description: Resource details
@@ -81,7 +103,8 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       requestBody:
         required: true
         content:
@@ -100,7 +123,8 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
+            format: int64
       responses:
         '204':
           description: Resource deleted successfully
@@ -326,8 +350,8 @@ components:
       type: object
       properties:
         decision:
-          type: string
-          description: Authorization decision ("allow" or "deny")
+          type: boolean
+          description: Authorization decision true for allow and deny if false
         reason:
           type: string
           description: The reason for the decision
@@ -337,7 +361,6 @@ components:
     Resource:
       type: object
       description: "it stores resources identifation and meta data"
-      additionalProperties  : false
       required:
         - type
         - name
@@ -431,8 +454,8 @@ components:
 
     Properties:
       type: object
+
       required:
-        - uuid
         - key
       properties:
         id:
