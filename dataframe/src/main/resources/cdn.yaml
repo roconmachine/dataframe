@@ -1,0 +1,88 @@
+openapi: 3.0.1
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+servers:
+  - url: 'https://api.example.com'
+tags:
+  - name: CDN
+
+paths:
+  /upload:
+    post:
+      tags:
+        - CDN
+      summary: Upload files
+      operationId: uploadFiles
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReportFile'
+      responses:
+        201:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
+  /download/{id}:
+    get:
+      tags:
+        - CDN
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            multipart/form-data:
+              schema:
+                type: string
+                format: binary
+
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
+
+
+components:
+  schemas:
+    ReportFile:
+      type: object
+      properties:
+        attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Property'
+        docs:
+          type: string
+          format: binary
+      required:
+        - attributes
+        - docs
+
+    Property:
+      type: object
+      properties:
+        uuid:
+          type: string
+        key:
+          type: string
+        value:
+          type: string

@@ -1,0 +1,18 @@
+spring:
+    application:
+        name: dataframe
+
+
+services:
+    cdn:
+        baseUrl: "cdn"
+    fgaccess:
+        baseUrl: ""
+    notification:
+        baseUrl: ""
+    payment:
+        baseUrl: ""
+    report:
+        baseUrl: ""
+    state:
+        baseUrl: ""

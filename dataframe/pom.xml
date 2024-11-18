@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.roconmachine.io</groupId>
+	<artifactId>dataframe</artifactId>
+	<version>0.0.1</version>
+	<name>dataframe</name>
+	<description>internal gateway</description>
+	<properties>
+		<java.version>17</java.version>
+		<validation.version>3.3.3</validation.version>
+		<swagger2.version>3.0.0</swagger2.version>
+		<swagger.annotation.version>2.2.25</swagger.annotation.version>
+		<jakson.version>0.2.6</jakson.version>
+		<servlet.api.version>2.5</servlet.api.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>6.1.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>6.1.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>6.1.12</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>6.1.12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+			<version>3.3.3</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${swagger2.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+
+				</exclusion>
+
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-core-jakarta</artifactId>
+			<version>2.2.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+
+				</exclusion>
+
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>${swagger.annotation.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jakson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>6.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.realityforge.javax.annotation</groupId>
+			<artifactId>javax.annotation</artifactId>
+			<version>1.1.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.projectreactor</groupId>
+			<artifactId>reactor-core</artifactId>
+			<version>3.5.0</version> <!-- Use the latest stable version -->
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webflux</artifactId>
+			<version>6.1.14</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>2.18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.34</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>3.4.0-RC1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>7.8.0</version>
+				<executions>
+					<!--fgaccess-->
+					<execution>
+						<id>fg_access_server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+
+						<configuration>
+							<skipValidateSpec>true</skipValidateSpec>
+							<inputSpec>
+								${project.basedir}/src/main/resources/fgaccess.yaml
+							</inputSpec>
+
+							<apiPackage>com.roconmachine.io.dataframe.fgaccess.interfaces</apiPackage>
+							<modelPackage>com.roconmachine.io.dataframe.fgaccess.models</modelPackage>
+							<supportingFilesToGenerate>
+								ApiUtil.java
+							</supportingFilesToGenerate>
+							<generatorName>spring</generatorName>
+
+							<configOptions>
+								<spring.webflux.disable-swagger-parameter>true</spring.webflux.disable-swagger-parameter>
+								<reactive>true</reactive>
+								<useSpringBoot3>true</useSpringBoot3>
+
+								<interfaceOnly>true</interfaceOnly>
+								<delegatePattern>false</delegatePattern>
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>fg_access_client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<!-- Webclient generator config -->
+							<generatorName>java</generatorName>
+							<library>webclient</library>
+
+							<!-- Reference to the Petstore spec -->
+							<inputSpec>
+								${project.basedir}/src/main/resources/fgaccess.yaml
+							</inputSpec>
+
+							<skipIfSpecIsUnchanged>true</skipIfSpecIsUnchanged>
+							<generateApis>true</generateApis>
+							<generateApiDocumentation>false</generateApiDocumentation>
+							<generateApiTests>false</generateApiTests>
+							<generateModels>true</generateModels>
+							<generateModelDocumentation>false</generateModelDocumentation>
+							<generateModelTests>false</generateModelTests>
+							<skipValidateSpec>true</skipValidateSpec>
+							<generateSupportingFiles>true</generateSupportingFiles>
+							<output>${project.build.directory}/generated-sources</output>
+							<!-- Model java package name -->
+							<modelPackage>com.roconmachine.io.dataframe.fgaccess.client.model</modelPackage>
+							<!-- API java package name -->
+							<apiPackage>com.roconmachine.io.dataframe.fgaccess.client.api</apiPackage>
+							<configOptions>
+								<oas3>true</oas3>
+								<useSpringController>true</useSpringController>
+								<useSpringfox>false</useSpringfox>
+
+								<sourceFolder>main/java</sourceFolder>
+								<!-- Use modern java8 date/time api -->
+								<dateLibrary>java8</dateLibrary>
+								<java8>true</java8>
+								<!-- Do not include any validation with the client -->
+								<useBeanValidation>false</useBeanValidation>
+								<performBeanValidation>false</performBeanValidation>
+								<interfaceOnly>false</interfaceOnly>
+								<useOptional>false</useOptional>
+								<!-- Make the models serializable -->
+								<serializableModel>true</serializableModel>
+								<!--								<apiNameSuffix>CustomApi</apiNameSuffix>-->
+
+							</configOptions>
+						</configuration>
+					</execution>
+					<!--cdn-->
+					<execution>
+						<id>cdn server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<skipValidateSpec>true</skipValidateSpec>
+							<inputSpec>
+								${project.basedir}/src/main/resources/cdn.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.roconmachine.io.dataframe.cdn.interfaces</apiPackage>
+							<modelPackage>com.roconmachine.io.dataframe.cdn.models</modelPackage>
+<!--							<supportingFilesToGenerate>-->
+<!--								CdnApiUtil.java-->
+<!--							</supportingFilesToGenerate>-->
+							<configOptions>
+								<delegatePattern>false</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<useSpringBoot3>true</useSpringBoot3>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>cdn client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<generatorName>java</generatorName>
+							<inputSpec>${project.basedir}/src/main/resources/cdn.yaml</inputSpec>
+							<invokerPackage>com.roconmachine.io.dataframe.cdn.client</invokerPackage>
+							<modelPackage>com.roconmachine.io.dataframe.cdn.models</modelPackage>
+							<apiPackage>com.roconmachine.io.dataframe.cdn.client.api</apiPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<library>resttemplate</library>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+
+						</configuration>
+					</execution>
+					<!--notification-->
+					<execution>
+						<id>notification client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<generatorName>java</generatorName>
+							<inputSpec>${project.basedir}/src/main/resources/notification.yaml</inputSpec>
+							<invokerPackage>com.roconmachine.io.dataframe.notification.client</invokerPackage>
+							<modelPackage>com.roconmachine.io.dataframe.notification.models</modelPackage>
+							<apiPackage>com.roconmachine.io.dataframe.notification.client.api</apiPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<library>resttemplate</library>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+
+						</configuration>
+					</execution>
+					<execution>
+						<id>notification server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<skipValidateSpec>true</skipValidateSpec>
+							<inputSpec>
+								${project.basedir}/src/main/resources/notification.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.roconmachine.io.dataframe.notification.interfaces</apiPackage>
+							<modelPackage>com.roconmachine.io.dataframe.notification.models</modelPackage>
+							<supportingFilesToGenerate>
+								ApiUtil.java
+							</supportingFilesToGenerate>
+							<configOptions>
+								<delegatePattern>false</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<useSpringBoot3>true</useSpringBoot3>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<!--payment				-->
+					<execution>
+						<id>payment server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<skipValidateSpec>true</skipValidateSpec>
+							<inputSpec>
+								${project.basedir}/src/main/resources/payment.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.roconmachine.io.dataframe.payment.interfaces</apiPackage>
+							<modelPackage>com.roconmachine.io.dataframe.payment.models</modelPackage>
+							<supportingFilesToGenerate>
+								ApiUtil.java
+							</supportingFilesToGenerate>
+							<configOptions>
+								<delegatePattern>false</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<useSpringBoot3>true</useSpringBoot3>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>payment client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<generatorName>java</generatorName>
+							<inputSpec>${project.basedir}/src/main/resources/payment.yaml</inputSpec>
+							<invokerPackage>com.roconmachine.io.dataframe.payment.client</invokerPackage>
+							<modelPackage>com.roconmachine.io.dataframe.payment.models</modelPackage>
+							<apiPackage>com.roconmachine.io.dataframe.payment.client.api</apiPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<library>resttemplate</library>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+
+						</configuration>
+					</execution>
+
+					<!--report-->
+					<execution>
+						<id>report server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<skipValidateSpec>true</skipValidateSpec>
+							<inputSpec>
+								${project.basedir}/src/main/resources/report.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.roconmachine.io.dataframe.report.interfaces</apiPackage>
+							<modelPackage>com.roconmachine.io.dataframe.report.models</modelPackage>
+							<supportingFilesToGenerate>
+								ApiUtil.java
+							</supportingFilesToGenerate>
+							<configOptions>
+								<delegatePattern>false</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<useSpringBoot3>true</useSpringBoot3>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>report client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<generatorName>java</generatorName>
+							<inputSpec>${project.basedir}/src/main/resources/report.yaml</inputSpec>
+							<invokerPackage>com.roconmachine.io.dataframe.report.client</invokerPackage>
+							<modelPackage>com.roconmachine.io.dataframe.report.models</modelPackage>
+							<apiPackage>com.roconmachine.io.dataframe.report.client.api</apiPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<library>resttemplate</library>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+
+						</configuration>
+					</execution>
+					<!-- state -->
+					<execution>
+						<id>state server</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<skipValidateSpec>true</skipValidateSpec>
+							<inputSpec>
+								${project.basedir}/src/main/resources/state.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<apiPackage>com.roconmachine.io.dataframe.state.interfaces</apiPackage>
+							<modelPackage>com.roconmachine.io.dataframe.state.models</modelPackage>
+							<supportingFilesToGenerate>
+								ApiUtil.java
+							</supportingFilesToGenerate>
+							<configOptions>
+								<delegatePattern>false</delegatePattern>
+								<interfaceOnly>true</interfaceOnly>
+								<useSpringBoot3>true</useSpringBoot3>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+						</configuration>
+					</execution>
+					<execution>
+						<id>state client</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<generatorName>java</generatorName>
+							<inputSpec>${project.basedir}/src/main/resources/state.yaml</inputSpec>
+							<invokerPackage>com.roconmachine.io.dataframe.state.client</invokerPackage>
+							<modelPackage>com.roconmachine.io.dataframe.state.models</modelPackage>
+							<apiPackage>com.roconmachine.io.dataframe.state.client.api</apiPackage>
+							<generateApiTests>false</generateApiTests>
+							<generateModelTests>false</generateModelTests>
+							<library>resttemplate</library>
+							<configOptions>
+								<useSpringBoot3>true</useSpringBoot3>
+								<useJakartaEe>true</useJakartaEe>
+								<additionalModelTypeAnnotations>
+									@lombok.AllArgsConstructor
+									@lombok.Builder
+								</additionalModelTypeAnnotations>
+							</configOptions>
+
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+</project>

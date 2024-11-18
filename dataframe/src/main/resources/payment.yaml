@@ -1,0 +1,69 @@
+openapi: 3.0.1
+info:
+  title: Sample API
+  description: API description in Markdown.
+  version: 1.0.0
+servers:
+  - url: 'https://api.example.com'
+tags:
+  - Payment
+paths:
+  /payment/{issue_id}:
+    post:
+      tags:
+        - Payment
+      parameters:
+        - in: path
+          name: issue_id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Payment'
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
+
+
+
+components:
+  schemas:
+    Payment:
+      type: object
+      properties:
+        method:
+          type: string
+        ammount:
+          type: number
+        currency:
+          type: string
+        ref:
+          type: string
+        remarks:
+          type: string
+#    PaymentResponse:
+#      type: object
+#      properties:
+#        ammount:
+#          type: number
+#        currency:
+#          type: string
+#        ref:
+#          type: string
+#        remarks:
+#          type: string

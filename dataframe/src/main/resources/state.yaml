@@ -1,0 +1,132 @@
+openapi: 3.0.1
+info:
+  title: state-service
+  description: API description in Markdown.
+  version: 1.0.0
+servers:
+  - url: '/state-service'
+tags:
+  - State
+paths:
+  /transfer/{stateid}/{actionid}:
+    get:
+      tags:
+        - State
+      summary: Return next state.
+      description: Optional extended description in Markdown.
+      parameters:
+        - name: stateid
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: actionid
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "success"
+                  message:
+                    type: string
+                    example: "Mappings configured successfully."
+                  state:
+                    $ref: '#/components/schemas/State'
+
+        404:
+          description: "Not Found - State or Action ID does not exist"
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
+  /config:
+    post:
+      tags:
+        - State
+      summary: "Insert list of mapping that represants a lifecycle of Domain"
+      operationId: configure
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/StateMapping'
+      responses:
+        201:
+          description: "Mappings successfully created"
+        404:
+          description: "Not Found - Resource not found (if applicable)"
+        400:
+          description: "Bad Request - Invalid input, could not parse or validate the request body"
+        500:
+          description: "Server Error - Unable to execute action due to internal error"
+
+components:
+  schemas:
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+
+        description:
+          type: string
+
+        rank:
+          type: integer
+
+        domain:
+          $ref: '#/components/schemas/Domain'
+        reference:
+          type: string
+        isFundAllowed:
+          type: boolean
+      required:
+        - name
+
+    Domain:
+      type: object
+      properties:
+        class:
+          type : string
+        application:
+          type : integer
+          format: int64
+
+    StateMapping:
+      type: object
+      properties:
+        from_state:
+          $ref: '#/components/schemas/State'
+        to_state:
+          $ref: '#/components/schemas/State'
+        action:
+          $ref: '#/components/schemas/Action'
+    Action:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        has_condition:
+          type: boolean
