@@ -30,6 +30,8 @@ paths:
                 type: string
         '400':
           description: Bad request.
+        '404':
+          description: Not found.
         '401':
           description: Authorization failed
         '500':
@@ -57,6 +59,8 @@ paths:
           description: Bad request.
         '401':
           description: Authorization failed
+        '404':
+          description: Not found.
         '500':
           description: Internal server error
 

@@ -2,8 +2,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.roconmachine.io</groupId>
-	<artifactId>dataframe</artifactId>
+	<groupId>com.roconmachine</groupId>
+	<artifactId>io.dataframe</artifactId>
 	<version>0.0.1</version>
 	<name>dataframe</name>
 	<description>internal gateway</description>
@@ -193,8 +193,9 @@
 							<skipValidateSpec>true</skipValidateSpec>
 							<generateSupportingFiles>true</generateSupportingFiles>
 							<output>${project.build.directory}/generated-sources</output>
+							<invokerPackage>com.roconmachine.io.dataframe.fgaccess.client</invokerPackage>
 							<!-- Model java package name -->
-							<modelPackage>com.roconmachine.io.dataframe.fgaccess.client.model</modelPackage>
+							<modelPackage>com.roconmachine.io.dataframe.fgaccess.client.models</modelPackage>
 							<!-- API java package name -->
 							<apiPackage>com.roconmachine.io.dataframe.fgaccess.client.api</apiPackage>
 							<configOptions>
