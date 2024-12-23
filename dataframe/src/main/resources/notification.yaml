@@ -8,6 +8,32 @@ servers:
 tags:
   - name: Notification
 paths:
+  /notification/{id}/status/{newstatus}:
+    post:
+      tags:
+        - Notification
+      operationId: setStatus
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: newstatus
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Status updated"
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
   /notification:
     post:
       tags:
