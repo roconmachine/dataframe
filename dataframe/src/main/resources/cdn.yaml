@@ -71,9 +71,7 @@ components:
       type: object
       properties:
         attributes:
-          type: array
-          items:
-            $ref: '#/components/schemas/Property'
+          type: string
         docs:
           type: string
           format: binary

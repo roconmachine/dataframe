@@ -33,16 +33,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: "success"
-                  message:
-                    type: string
-                    example: "Mappings configured successfully."
-                  state:
-                    $ref: '#/components/schemas/State'
+                $ref: '#/components/schemas/State'
 
         404:
           description: "Not Found - State or Action ID does not exist"
@@ -76,7 +67,64 @@ paths:
           description: "Bad Request - Invalid input, could not parse or validate the request body"
         500:
           description: "Server Error - Unable to execute action due to internal error"
+  /config/avaiable-actions/{current_state}:
+    get:
+      tags:
+        - State
+      operationId: avaiableActions
+      parameters:
+        - name: current_state
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: "List of actions can perform."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          description: "Not Found - Resource not found (if applicable)"
+        400:
+          description: "Bad Request - Invalid input, could not parse or validate the request body"
+        500:
+          description: "Server Error - Unable to execute action due to internal error"
+  /register/{object_id}/{domain}:
+    post:
+      tags:
+        - State
+      operationId: registerMe
+      parameters:
+        - name: object_id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: domain
+          in: path
+          required: true
+          schema:
+            type: string
 
+      responses:
+        201:
+          description: "Register created"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+        404:
+          description: "Not Found - Resource not found (if applicable)"
+        400:
+          description: "Bad Request - Invalid input, could not parse or validate the request body"
+        500:
+          description: "Server Error - Unable to execute action due to internal error"
 components:
   schemas:
     State:
@@ -91,11 +139,11 @@ components:
         description:
           type: string
 
-        rank:
+        order:
           type: integer
-
+          format: int32
         domain:
-          $ref: '#/components/schemas/Domain'
+          type: string
         reference:
           type: string
         isFundAllowed:
@@ -108,19 +156,20 @@ components:
       properties:
         class:
           type : string
-        application:
-          type : integer
-          format: int64
+
 
     StateMapping:
       type: object
       properties:
         from_state:
-          $ref: '#/components/schemas/State'
+          type: integer
+          format: int64
         to_state:
-          $ref: '#/components/schemas/State'
+          type: integer
+          format: int64
         action:
-          $ref: '#/components/schemas/Action'
+          type: integer
+          format: int64
     Action:
       type: object
       properties:

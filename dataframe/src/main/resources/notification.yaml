@@ -8,10 +8,11 @@ servers:
 tags:
   - name: Notification
 paths:
-  /send:
+  /notification:
     post:
       tags:
         - Notification
+      operationId: saveNotification
       requestBody:
         required: true
         content:
@@ -31,10 +32,11 @@ paths:
           description: Authorization failed
         '500':
           description: Internal server error
-  /notification:
+
     get:
       tags:
         - Notification
+      operationId: searchNotification
       parameters:
         - in: query
           name: status
@@ -63,6 +65,7 @@ paths:
     get:
       tags:
         - Notification
+      operationId: getById
       parameters:
         - in: path
           name: id
@@ -76,9 +79,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Notification'
+                $ref: '#/components/schemas/Notification'
         '400':
           description: Bad request.
         '401':
@@ -91,6 +92,7 @@ paths:
     post:
       tags:
         - Notification
+      operationId: save
       requestBody:
         required: true
         content:
@@ -101,11 +103,8 @@ paths:
                 $ref: "#/components/schemas/Recipient"
       responses:
         '201':
-          description: "Recipient created"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Recipient"
+          description: "Recipient created if not exist"
+
         '400':
           description: Bad request.
         '401':
@@ -115,6 +114,7 @@ paths:
     delete:
       tags:
         - Notification
+      operationId: delete
       parameters:
         - name: ids
           in: query
@@ -134,17 +134,57 @@ paths:
         '500':
           description: Internal server error
 
-  /recipient-group/{name}:
+  /group:
     post:
       tags:
         - Notification
+      operationId: saveGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                $ref: '#/components/schemas/Group'
+      responses:
+        '201':
+          description: "Group created if not exist"
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
+  /group/{name}:
+    delete:
+      operationId: deleteGroup
       parameters:
-        - in: path
-          name: name
+        - name: name
+          in: path
           required: true
           schema:
             type: string
+      responses:
+        '200':
+          description: "Deleted"
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
 
+    post:
+      tags:
+        - Notification
+      operationId: assignRecipientsInGroup
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -152,35 +192,18 @@ paths:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/Recipient"
+                type: integer
+                format: int64
       responses:
         '201':
-          description: "Recipient group created"
-        '400':
-          description: Bad request.
-        '401':
-          description: Authorization failed
-        '500':
-          description: Internal server error
-    delete:
-      tags:
-        - Notification
-      parameters:
-        - in: path
-          name: name
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "Recipient group deleted"
-        '400':
-          description: Bad request.
-        '401':
-          description: Authorization failed
-        '500':
-          description: Internal server error
+          description: "assigned"
 
+        '400':
+          description: Bad request.
+        '401':
+          description: Authorization failed
+        '500':
+          description: Internal server error
 
 
 
@@ -193,8 +216,6 @@ components:
         id:
           type: integer
           format: int64
-        message:
-          type: string
         template_name:
           type: string
         subject_placeholders:
@@ -211,28 +232,11 @@ components:
             type: string
         recipient_group:
           type: string
-        sent_date:
-          type: string
-        ack_url:
-          type: string
         severity:
           type: string
           enum: ["info","success", "warning", "error"]
-        status:
-          type: string
-          enum: ["pending","sent", "ack","failed"]
 
-    RecipientGroup:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        group_name:
-          type: string
-        recipient_id:
-          type: integer
-          format: int64
+
     Recipient:
       type: object
       properties:
@@ -249,7 +253,8 @@ components:
           type: string
       required:
         - name
-    NotificationTemplate:
+
+    Group:
       type: object
       properties:
         id:
@@ -257,10 +262,5 @@ components:
           format: int64
         name:
           type: string
-        subject_template:
-          type: string
-        body_template:
-          type: string
-
       required:
         - name
